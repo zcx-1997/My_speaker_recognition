@@ -36,9 +36,10 @@ def sphere2wav(wav_path,tar_dir):
 
 if __name__ == '__main__':
 
-    # wav_path = r'../data/TIMIT/TRAIN/*/*/*.WAV'
-    # tar_dir = r'../data/TIMIT/train_wav'
+    train_wav_path = r'../data/TIMIT/TRAIN/*/*/*.WAV'
+    train_tar_dir = r'../data/TIMIT_Transformed/train_wav'
+    sphere2wav(train_wav_path,train_tar_dir)
 
-    wav_path = r'../data/TIMIT/TEST/*/*/*.WAV'
-    tar_dir = r'../data/TIMIT/test_wav'
-    sphere2wav(wav_path,tar_dir)
+    test_wav_path = r'../data/TIMIT/TEST/*/*/*.WAV'
+    test_tar_dir = r'../data/TIMIT_Transformed/test_wav'
+    sphere2wav(test_wav_path,test_tar_dir)

@@ -7,10 +7,11 @@
 
 import glob
 import os
+import torch
 import numpy as np
 
 from torch.utils.data import Dataset, DataLoader
-from audio_progress.mfcc_extract import mfcc_40, audio_load
+from audio_process.mfcc_extract import mfcc_40, audio_load
 
 class TimitDataset(Dataset):
 
@@ -18,6 +19,7 @@ class TimitDataset(Dataset):
         if train:
             self.path = r'data/TIMIT/train_wav/*/*/*.WAV'
             self.filenames = glob.glob(self.path)
+            self.framelen = 180
         else:
             self.path = r'data/TIMIT/test_wav/*/*/*.WAV'
             self.filenames = glob.glob(self.path)
@@ -31,20 +33,35 @@ class TimitDataset(Dataset):
         audio,sr = audio_load(filename)
         mfcc = mfcc_40(audio,sr,winfunc=np.hamming)
         label = os.path.dirname(filename)[-5:]
+        mfcc_db = torch.tensor(mfcc[:180])
+        # label = torch.tensor(label)
+        return [mfcc_db,label]
 
-        return mfcc,label
+def my_collate(batch):
+    # batch contains a list of tuples of structure (sequence, target)
+    data = [item[0] for item in batch]
+    targets = [item[1] for item in batch]
+    return data, targets
+
 
 if __name__ == '__main__':
     train_db = TimitDataset()
-    x,y = DataLoader(train_db,batch_size=10)
+    # x,y = DataLoader(train_db)
+    #
+    # print(x.shape)
+    # print(y)
+    # print(len(train_db))
+    # x,y = train_db[0]
+    # print(x,type(x))
+    # print(y,type(y))
 
-    print(x.shape)
-    print(y)
-    print(len(train_db))
+    train_data,labels = DataLoader(train_db,shuffle=True,batch_size=10,collate_fn=my_collate(10))
+    print(len(train_data),train_data.shape)
+    print(labels)
 
-    test_db = TimitDataset(train=False)
-    x,y = test_db[0]
-    print(x,x.shape)
-    print(y)
-    print(len(test_db))
+    # test_db = TimitDataset(train=False)
+    # x,y = test_db[0]
+    # print(x,x.shape)
+    # print(y)
+    # print(len(test_db))
 
