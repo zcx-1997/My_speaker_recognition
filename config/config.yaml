@@ -17,6 +17,8 @@ data:
   hop_frame: 0.01
   nfft: 512
   nmels: 40
+  train_speaker: 567
+  test_speaker: 63
 ---
 model:
   lstm_hidden: 64
@@ -26,9 +28,9 @@ model:
 ---
 train:
   num_utters: 10
-  batch_size: 4
+  batch_size: 6
   lr: 0.01
-  epochs: 200
+  epochs: 300
 ---
 test:
   num_utters: 6

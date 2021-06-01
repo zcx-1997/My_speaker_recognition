@@ -15,21 +15,23 @@ from utils.utils import get_centroids,get_cossim,calc_loss
 class MyLSTM(nn.Module):
     def __init__(self):
         super(MyLSTM, self).__init__()
-        self.lstm = nn.LSTM(hp.data.nmels,hp.model.lstm_hidden,num_layers=hp.model.num_layer,batch_first=True)
-        for name,param in self.lstm.named_parameters():
-            if 'bias' in name:
-                nn.init.constant_(param,0.0)
-            elif 'weight' in name:
-                nn.init.xavier_uniform_(param)
-        self.dense = nn.Linear(hp.model.lstm_hidden,hp.model.linear_hidden)
+        self.lstm = nn.LSTM(hp.data.nmels,hp.model.lstm_hidden,num_layers=hp.model.num_layer,    # (40,64,1)
+                            dropout=0.5,batch_first=True)
+        # for name,param in self.lstm.named_parameters():
+        #     if 'bias' in name:
+        #         nn.init.constant_(param,0.0)
+        #     elif 'weight' in name:
+        #         nn.init.xavier_uniform_(param)
+        self.linear1 = nn.Linear(hp.model.lstm_hidden,hp.model.linear_hidden)   # (64,128)
+        self.linear2 = nn.Linear(hp.model.linear_hidden,hp.data.train_speaker)  # (128,567)
 
-    def forward(self,x):
-        y,_ = self.lstm(x)  # torch.Size([20, 183, 64])
-        y = y[:,y.size(1)-1]  # 取最后一帧  torch.Size([20, 64])
-        y = self.dense(y)  #torch.Size([20, 128])
-
-        out = y / torch.norm(y,dim=1).unsqueeze(1)
-        return out
+    def forward(self,x):  # torch.Size([6*10, 180, 40])
+        y,_ = self.lstm(x)  # (6*10,180,64)
+        y = y[:,-1,:]  # 取最后时间T的输出  torch.Size([6*10, 64])
+        out1 = self.linear1(y)  # torch.Size([60, 128])
+        out2 = self.linear2(out1)  # (60,567)
+        # out = y / torch.norm(y,dim=1).unsqueeze(1)
+        return out1,out2
 
 class GE2ELoss(nn.Module):
 
@@ -51,11 +53,12 @@ class GE2ELoss(nn.Module):
 
 if __name__ == '__main__':
 
-    x = torch.randn([20,183,40])
+    x = torch.randn([6*10,180,40])
 
     mylstm = MyLSTM()
-    out = mylstm(x)
-    print(out.shape)
+    out1,out2 = mylstm(x)
+    print(out1.shape)
+    print(out2.shape)
 
 
 

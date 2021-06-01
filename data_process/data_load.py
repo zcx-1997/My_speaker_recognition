@@ -62,16 +62,18 @@ class TIMITPreprocessed(Dataset):
         self.file_list = os.listdir(self.path)
         self.shuffle = shuffle
         self.utter_start = utter_start
+        # self.indices = len(self.file_list)
 
     def __len__(self):
         return len(self.file_list)
 
     def __getitem__(self, idx):
-        if self.shuffle:
-            selected_file = random.sample(self.file_list,1)[0]  # 字符串，无[0]是只包含一个字符串的数组
-        else:
-            selected_file = self.file_list[idx]
 
+        # if self.shuffle:
+        #     selected_file = random.sample(self.file_list,1)[0]  # 字符串，无[0]是只包含一个字符串的数组
+        # else:
+        selected_file = self.file_list[idx]
+        label = idx
         utters = np.load(os.path.join(self.path,selected_file))
 
         if self.shuffle:
@@ -82,29 +84,35 @@ class TIMITPreprocessed(Dataset):
 
         # utterances = utterances[:,:,:160]
         # utterances = torch.Tensor(np.transpose(utterances,axes=(0,2,1)))
-        return utterances
+        labels = torch.zeros((hp.train.num_utters,))
+        labels += label
+        return torch.Tensor(utterances),labels.long()
 
 
 if __name__ == '__main__':
 
-    print('TIMIT-TRAIN')
-    timit_train = TIMITUnProcessed()
-    print(len(timit_train))
-    print(timit_train[0].shape)
-    print(timit_train[1].shape)
-    print(timit_train[2].shape)
-
-    print('TIMIT-TEST')
-    timit_test = TIMITUnProcessed(train=False)
-    print(len(timit_test))
-    print(timit_test[0].shape)
-    print(timit_test[1].shape)
-    print(timit_test[2].shape)
+    # print('TIMIT-TRAIN')
+    # timit_train = TIMITUnProcessed()
+    # print(len(timit_train))
+    # print(timit_train[0].shape)
+    # print(timit_train[1].shape)
+    # print(timit_train[2].shape)
+    #
+    # print('TIMIT-TEST')
+    # timit_test = TIMITUnProcessed(train=False)
+    # print(len(timit_test))
+    # print(timit_test[0].shape)
+    # print(timit_test[1].shape)
+    # print(timit_test[2].shape)
 
     print('TIMIT-P-TRAIN')
     timit_p_train = TIMITPreprocessed()
-    print(len(timit_p_train),timit_p_train[0].shape)
+    print(len(timit_p_train),timit_p_train[0][0].shape)
+    print(type(timit_p_train[0]))
+    print(timit_p_train[155][0].shape)
+    print(timit_p_train[155][1])
+
 
     print('\nTIMIT-P-TEST')
     timit_p_test = TIMITPreprocessed(train=False)
-    print(len(timit_p_test),timit_p_test[0].shape)
+    print(len(timit_p_test),timit_p_test[0][0].shape)
