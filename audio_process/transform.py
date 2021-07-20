@@ -12,8 +12,8 @@ import glob
 import os
 from sphfile import SPHFile
 
-def sphere2wav(wav_path,tar_dir):
 
+def sphere2wav(wav_path, tar_dir):
     '''
     将sphere格式的音频文件转换成wav格式
     :param wav_path: 要处理的音频路径
@@ -23,7 +23,7 @@ def sphere2wav(wav_path,tar_dir):
     sph_files = glob.glob(wav_path)
     # print(len(sph_files))
     for i in sph_files:
-        tar_path = tar_dir+'\\'+i.split('\\',1)[1]
+        tar_path = tar_dir + '/' + i.split('/', 1)[1]
 
         if os.path.exists(os.path.dirname(tar_path)):
             sph = SPHFile(i)
@@ -34,12 +34,12 @@ def sphere2wav(wav_path,tar_dir):
             sph.write_wav(tar_path)
     print("sphere2wav is done")
 
+
 if __name__ == '__main__':
+    train_wav_path = r'/home/zcx/datasets/TIMIT/TRAIN/*/*/*.WAV'
+    train_tar_dir = r'/home/zcx/datasets/TIMIT/train_wav'
+    sphere2wav(train_wav_path, train_tar_dir)
 
-    train_wav_path = r'../data/TIMIT/TRAIN/*/*/*.WAV'
-    train_tar_dir = r'../data/TIMIT_Transformed/train_wav'
-    sphere2wav(train_wav_path,train_tar_dir)
-
-    test_wav_path = r'../data/TIMIT/TEST/*/*/*.WAV'
-    test_tar_dir = r'../data/TIMIT_Transformed/test_wav'
-    sphere2wav(test_wav_path,test_tar_dir)
+    test_wav_path = r'/home/zcx/datasets/TIMIT/TEST/*/*/*.WAV'
+    test_tar_dir = r'/home/zcx/datasets/TIMIT/test_wav'
+    sphere2wav(test_wav_path, test_tar_dir)

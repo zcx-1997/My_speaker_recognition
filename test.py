@@ -5,6 +5,8 @@
     Author  : 春晓
     Software: PyCharm
 """
+import numpy
+import numpy as np
 import torch
 
 n = 630
