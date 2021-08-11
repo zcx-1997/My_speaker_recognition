@@ -66,8 +66,8 @@ def mfcc_39(audio,sr,energy=True,winfunc=None):
     :return:(n_frames,39)
     '''
     mfcc = mfcc_13(audio,sr,energy=energy,winfunc=winfunc)
-    mfcc_delta = python_speech_features.delta(mfcc,1)
-    mfcc_delta2 = python_speech_features.delta(mfcc,2)
+    mfcc_delta = python_speech_features.delta(mfcc,2)
+    mfcc_delta2 = python_speech_features.delta(mfcc_delta,2)
     mfcc = np.hstack((mfcc,mfcc_delta,mfcc_delta2))
     return mfcc
 

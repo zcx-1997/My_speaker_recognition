@@ -15,7 +15,7 @@ from datetime import datetime
 
 from hparam import hparam as hp
 from data_process.data_load import TIMITUnProcessed,TIMITPreprocessed
-from model.trian_model import MyLSTM,GE2ELoss,get_centroids,get_cossim
+from model_test.trian_model import MyLSTM,GE2ELoss,get_centroids,get_cossim
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

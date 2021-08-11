@@ -53,7 +53,6 @@ class Hparam(Dotdict):
 
 hparam = Hparam()
 
-
 if __name__ == '__main__':
     hparam = Hparam()
     print(hparam.training)
