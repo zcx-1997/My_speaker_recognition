@@ -5,7 +5,7 @@
 @IDE                ：PyCharm
 @Author             ：zcx
 @Date               ：2021/8/11 上午10:26
-@Description        ：
+@Description        ：将TIMIT数据集转换成npy数据 trian:0-461,test:462-629
                     _ooOoo_    
                    o8888888o    
                    88" . "88    
@@ -30,7 +30,6 @@
 """
 import os
 import glob
-import librosa
 import torch
 import torchaudio
 import numpy as np
@@ -41,8 +40,7 @@ import constants as c
 def extractFeatures(src_path, tar_dir):
     """
     Extract features, the features are saved as numpy file.
-    Each partial utterance is splitted by voice detection using DB
-    the first and the last 180 frames from each partial utterance are saved.
+    The time per utterance is fixed by 3s and 299 frames from each utterance
     """
 
     print("start text independent utterance feature extraction")
