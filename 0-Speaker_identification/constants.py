@@ -39,11 +39,11 @@ fix_time_utter = 3 # 单位：s
 
 # train
 train_num_spks = 462
-num_utters_trian = 10
+num_utters_trian = 7
 batch_train = 4
 
 # errollement and test
-num_utters_test = 6
+num_utters_test = 3
 batch_test = 4
 # model
 hidden_lstm = 768
