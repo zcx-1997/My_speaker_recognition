@@ -38,7 +38,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 import constants as c
-from data_loader import MLPTrianDataset
+from data_loader import MLPTrianDataset, MLPTestDataset
 from model import MyMLP
 
 #计算准确率
@@ -62,7 +62,6 @@ def train(device):
     checkpoint_dir = r'checkpoints'
     log_file = os.path.join(checkpoint_dir,'logs')
     os.makedirs(checkpoint_dir, exist_ok=True)
-
 
     epochs = 1000
     lr = 0.001
@@ -130,7 +129,27 @@ def train(device):
     print("\nDone, trained model saved at", save_model_path)
 
 def test(model_path):
-    pass
+    net = MyMLP(40 * 40, 462)
+    net.load_state_dict(torch.load(model_path))
+    data = MLPTestDataset()
+    num_right = 0
+
+    for _ in range(10000):
+        i = random.randint(1, len(data)-1)
+        enroll_data, test_data = data[i]
+        enroll_data = enroll_data.reshape(enroll_data.shape[0], -1)
+        test_data = test_data.reshape(-1)
+        enroll_embedding = net(enroll_data).mean(dim=0)
+        print(enroll_embedding.shape)
+        test_embedding = net(test_data)
+        # print(test_embedding.shape)
+        cossim = torch.cosine_similarity(enroll_embedding,test_embedding,dim=0)
+        print(cossim)
+
+        if cossim > 0.5:
+            num_right += 1
+
+    return num_right / 10000
 
 def predict(net,x,y):
     x = x.reshape(-1)
@@ -143,21 +162,24 @@ def predict(net,x,y):
         return 0
 
 if __name__ == '__main__':
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print("training on: ", device)
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # print("training on: ", device)
     # train(device)
 
-    data = MLPTrianDataset()
+    # data = MLPTrianDataset()
+    # model_path = r'checkpoints/final_epoch_1000.model'
+    # net = MyMLP(40 * 40, 462)
+    # # net = net.to(device)
+    # net.load_state_dict(torch.load(model_path))
+    # x,y = data[0]
+    # predict(net,x,y)
+    #
+    # num = 0
+    # for _ in range(1000):
+    #     i = random.randint(1, 10000)
+    #     x, y = data[i]
+    #     num += predict(net,x,y)
+    # print("acc:%f" % (num/1000))
     model_path = r'checkpoints/final_epoch_1000.model'
-    net = MyMLP(40 * 40, 462)
-    # net = net.to(device)
-    net.load_state_dict(torch.load(model_path))
-    x,y = data[0]
-    predict(net,x,y)
-
-    num = 0
-    for _ in range(1000):
-        i = random.randint(1, 10000)
-        x, y = data[i]
-        num += predict(net,x,y)
-    print("acc:%f" % (num/1000))
+    acc = test(model_path)
+    print(acc)  # 0.873800.

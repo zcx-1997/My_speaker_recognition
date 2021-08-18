@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 =================================================
-@Project -> File    ：My_speaker_recognition -> model
+@Project -> File    ：My_speaker_recognition -> data_loader
 @IDE                ：PyCharm
 @Author             ：zcx
-@Date               ：2021/8/11 上午9:12
+@Date               ：2021/8/14 下午2:47
 @Description        ：
                     _ooOoo_    
                    o8888888o    
@@ -28,27 +28,24 @@
               佛祖保佑             永无BUG
 ==================================================
 """
-import numpy as np
 import torch
-from torch import nn, autograd, optim
-from matplotlib import pyplot as plt
+import torchaudio
+from torch.utils.data import DataLoader
+# 数据集：librispeech
 
-class MyMLP(nn.Module):
+train_db = torchaudio.datasets.LIBRISPEECH('data','dev-clean',download=True)
+print(len(train_db))
+print(train_db[0])
+print(train_db[1])
+print(train_db[0][0])
+print(train_db[0][0].shape)
+print(train_db[1][0].shape)
 
-    def __init__(self,in_size,out_size):
-        super(MyMLP, self).__init__()
-        self.in_size = in_size
-        self.out_size = out_size
-        self.fc1 = nn.Linear(self.in_size, 128)
-        self.fc2 = nn.Linear(128, 256)
-        self.fc3 = nn.Linear(256, out_size)
+train_loader = DataLoader(train_db,batch_size=2)
+print(len(train_loader))
+# data = next(iter(train_loader))
+# print(data[0])
+# print(data[1])
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
-        # x = nn.ReLU(x)
-        return x
-
-
-
+audio,sr = torchaudio.load(r'data/LibriSpeech/dev-clean/84/121123/84-121123-0000.flac')
+print(audio[:2],sr)

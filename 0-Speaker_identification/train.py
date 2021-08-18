@@ -154,12 +154,13 @@ def train(device):
     print("\nDone, trained model saved at", save_model_path)
 
 
-
 def predict(net, x, y):
     x = x.reshape(-1)
+    print(x.shape)
     y_hat = net(x)
     print("predict:", torch.argmax(y_hat))
     print("label:", y.long())
+
 
 def predicts(net, x, y):
     x = x.reshape(-1)
@@ -170,22 +171,22 @@ def predicts(net, x, y):
         return 0
 
 
-def test(model_path,dataset):
-
+def test(model_path, dataset):
     net = MyMLP(40 * 40, 630)
     # net = net.to(device)
     net.load_state_dict(torch.load(model_path))
     i = random.randint(1, len(dataset))
     x, y = dataset[i]
+    print(x.shape)
     predict(net, x, y)
-
-    num = 0
-    for _ in range(1000):
-        i = random.randint(1, len(dataset))
-        x, y = dataset[i]
-        num += predicts(net, x, y)
-    print("acc:%f" % (num / 1000))
-
+    #
+    # num = 0
+    # for _ in range(1000):
+    #     i = random.randint(1, len(dataset))
+    #     x, y = dataset[i]
+    #     print(x.shape)
+    #     num += predicts(net, x, y)
+    # print("acc:%f" % (num / 1000))
 
 
 if __name__ == '__main__':
@@ -193,16 +194,20 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("training on: ", device)
     train(device)
+    # 训练集上效果好（0.95），在测试集上效果差（0.20）
 
     # print("=============== test ===================")
-    # model_path = r'checkpoints/final_epoch_400.model'
+    # model_path = r'checkpoints/final_epoch_1000.model'
     # print('train-dataset')
     # train_data = SI_Dataset()
-    # test(model_path,train_data)
+    # net = MyMLP(40 * 40, 630)
+    # # net = net.to(device)
+    # net.load_state_dict(torch.load(model_path))
+    # x, y = train_data[0]
+    # predict(net, x, y)
+    #
+    # test(model_path, train_data)
     #
     # print('test-dataset')
     # test_data = SI_Dataset(train=False)
-    # test(model_path,test_data)
-
-
-
+    # test(model_path, test_data)

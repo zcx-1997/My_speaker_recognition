@@ -89,6 +89,25 @@ class MLPTrianDataset(Dataset):
         lens = num_utters * int(c.num_frames / 40)
         return lens
 
+class MLPTestDataset(Dataset):
+    def __init__(self):
+        self.root_dir = r'data/test_tisv'
+
+        self.spks_list = os.listdir(self.root_dir)
+
+    def __len__(self):
+        return len(self.spks_list)
+
+    def __getitem__(self, idx):
+        spk = self.spks_list[idx]
+        spk_path = os.path.join(self.root_dir, spk)
+        spk_feats = np.load(spk_path)
+        spk_feats = spk_feats[:, :40]
+        spk_feats = torch.tensor(spk_feats, dtype=torch.float32)
+        indices = random.sample(range(0, 10), 8)
+        return  spk_feats[indices[1:]], spk_feats[indices[0]]
+
+
 
 if __name__ == '__main__':
     data = MLPTrianDataset()
@@ -107,3 +126,8 @@ if __name__ == '__main__':
     x, y = next(iter(data_loader))
     print(x.shape)
     print(y.shape)
+
+    testdata = MLPTestDataset()
+    enroll, test = testdata[0]
+    print(enroll.shape)
+    print(test.shape)
