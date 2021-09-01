@@ -140,7 +140,7 @@ def test(model_path):
         enroll_data = enroll_data.reshape(enroll_data.shape[0], -1)
         test_data = test_data.reshape(-1)
         enroll_embedding = net(enroll_data).mean(dim=0)
-        print(enroll_embedding.shape)
+        # print(enroll_embedding.shape)  #torch.Size([462])
         test_embedding = net(test_data)
         # print(test_embedding.shape)
         cossim = torch.cosine_similarity(enroll_embedding,test_embedding,dim=0)

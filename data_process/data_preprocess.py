@@ -14,7 +14,7 @@ import numpy as np
 from hparam import hparam as hp
 
 audio_path = glob.glob(os.path.dirname(hp.unprocessed_data))
-# print(audio_path)  # 如：'../data/TIMIT\\TEST\\DR1\\FAKS0'
+# print(audio_path)  # 如：'../data/0-TIMIT\\TEST\\DR1\\FAKS0'
 
 def save_spectrogram_tisv():
 

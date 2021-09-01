@@ -16,14 +16,14 @@ from scipy.fftpack import dct
 #from utils import sphere2wav
 
 # 音频文件装换
-# train_path = r'data/TIMIT/TRAIN/*/*/*.WAV'
+# train_path = r'data/0-TIMIT/TRAIN/*/*/*.WAV'
 # sphere2wav(train_path)
 #
-# test_path = r'data/TIMIT/TEST/*/*/*.WAV'
+# test_path = r'data/0-TIMIT/TEST/*/*/*.WAV'
 # sphere2wav(test_path,train=False)
 
 # 加载音频文件
-wav_path = r'../mfcc_extract/data/TIMIT/train_wav/DR6/FAPB0/SA1.WAV'
+wav_path = r'../mfcc_extract/data/0-TIMIT/train_wav/DR6/FAPB0/SA1.WAV'
 # audio,sr = librosa.load(wav_path,sr=None)
 
 sr, audio = wavfile.read(wav_path)

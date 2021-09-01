@@ -173,7 +173,7 @@ print("================= train data ===================")
     print(y.shape)
     print(y)
 
-    print("==============TIMIT frame================")
+    print("==============0-TIMIT frame================")
     frameData = TIMIT_Frame()
     x,y = frameData[0]
     print(x.shape)

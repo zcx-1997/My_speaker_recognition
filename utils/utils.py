@@ -120,7 +120,7 @@ def calc_loss(sim_matrix):
     return loss, per_embedding_loss
 
 if __name__ == '__main__':
-    # file = '../data/TIMIT/TEST/DR1/FAKS0/SA1.WAV'
+    # file = '../data/0-TIMIT/TEST/DR1/FAKS0/SA1.WAV'
     # mfccs_and_spec(file)
 
     x = torch.tensor([[1.0,2,3,4],[5,6,7,8]])

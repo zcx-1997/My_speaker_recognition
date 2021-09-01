@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
 
     # print('===========librosa')
-    # wav_path = r'../data/TIMIT/train_wav/DR6/FAPB0/SA1.WAV'
+    # wav_path = r'../data/0-TIMIT/train_wav/DR6/FAPB0/SA1.WAV'
     # audio, sr = audio_load(wav_path,mode=1)
     # print('采样率，音频类型，shape，最大值，最小值,中值', sr, audio.dtype, audio.shape, np.max(audio), np.min(audio), np.median(audio))
     #

@@ -64,7 +64,7 @@ def extractFeatures(src_path, tar_dir):
     print("==========================================")
 
     for i, spk_dir in enumerate(spks_list):
-        # eg. spk_dir = '/home/zcx/datasets/TIMIT/TIMIT_WAV/train_wav/DR3/MCAL0'
+        # eg. spk_dir = '/home/zcx/datasets/0-TIMIT/TIMIT_WAV/train_wav/DR3/MCAL0'
         print("%dth speaker processing..." % i)
         spk_spec = []
         for wav_name in os.listdir(spk_dir):  # 'SI1768.WAV'

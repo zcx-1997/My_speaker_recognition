@@ -91,21 +91,21 @@ class TIMITPreprocessed(Dataset):
 
 if __name__ == '__main__':
 
-    # print('TIMIT-TRAIN')
+    # print('0-TIMIT-TRAIN')
     # timit_train = TIMITUnProcessed()
     # print(len(timit_train))
     # print(timit_train[0].shape)
     # print(timit_train[1].shape)
     # print(timit_train[2].shape)
     #
-    # print('TIMIT-TEST')
+    # print('0-TIMIT-TEST')
     # timit_test = TIMITUnProcessed(train=False)
     # print(len(timit_test))
     # print(timit_test[0].shape)
     # print(timit_test[1].shape)
     # print(timit_test[2].shape)
 
-    print('TIMIT-P-TRAIN')
+    print('0-TIMIT-P-TRAIN')
     timit_p_train = TIMITPreprocessed()
     print(len(timit_p_train),timit_p_train[0][0].shape)
     print(type(timit_p_train[0]))
@@ -113,6 +113,6 @@ if __name__ == '__main__':
     print(timit_p_train[155][1])
 
 
-    print('\nTIMIT-P-TEST')
+    print('\n0-TIMIT-P-TEST')
     timit_p_test = TIMITPreprocessed(train=False)
     print(len(timit_p_test),timit_p_test[0][0].shape)
