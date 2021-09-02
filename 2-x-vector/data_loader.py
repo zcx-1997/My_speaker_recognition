@@ -53,7 +53,7 @@ class TIMITDataset(Dataset):
     def __getitem__(self, idx):
         self.spk_name = self.spks_list[idx]
         np_spk = np.load(os.path.join(self.path, self.spk_name))
-
+        spk_id = int(self.spk_name[:-4])
         if self.shuffle:
             indices = random.sample(range(0, 10), 10)
             utters = np_spk[indices]
@@ -61,7 +61,8 @@ class TIMITDataset(Dataset):
             utters = np_spk
         utters = utters[:, :self.num_frames]
         utters = torch.tensor(utters, dtype=torch.float32)
-        return utters
+        label = torch.tensor(spk_id)
+        return utters, label
 
     def __len__(self):
         return len(self.spks_list)
@@ -69,5 +70,11 @@ class TIMITDataset(Dataset):
 if __name__ == '__main__':
     trian_db = TIMITDataset()
     print(len(trian_db))
-    train_x = trian_db[0]
+    train_x, train_y = trian_db[0]
     print(train_x.shape)
+    print(train_y)
+
+    train_loader = DataLoader(trian_db,batch_size=4,shuffle=True,drop_last=True)
+    x,y = next(iter(train_loader))
+    print(x.shape)
+    print(y)

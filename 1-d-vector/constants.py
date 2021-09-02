@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 =================================================
-@Project -> File    ：My_speaker_recognition -> model
+@Project -> File    ：My_speaker_recognition -> constants
 @IDE                ：PyCharm
 @Author             ：zcx
-@Date               ：2021/8/11 上午9:12
+@Date               ：2021/8/11 上午10:38
 @Description        ：
                     _ooOoo_    
                    o8888888o    
@@ -28,27 +28,24 @@
               佛祖保佑             永无BUG
 ==================================================
 """
-import numpy as np
-import torch
-from torch import nn, autograd, optim
-from matplotlib import pyplot as plt
+# data
+sr = 16000
+frame_win = 0.025  # 400
+frame_hop = 0.01   # 160
+num_frames = 160
+nfft = 512
+nmels = 40
+fix_time_utter = 3 # 单位：s
 
-class MyMLP(nn.Module):
+# train
+train_num_spks = 462
+num_utters_trian = 10
+batch_train = 4
 
-    def __init__(self,in_size,out_size):
-        super(MyMLP, self).__init__()
-        self.in_size = in_size
-        self.out_size = out_size
-        self.fc1 = nn.Linear(self.in_size, 128)
-        self.fc2 = nn.Linear(128, 256)
-        self.fc3 = nn.Linear(256, out_size)
-
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
-        # x = nn.ReLU(x)
-        return x
-
-
-
+# errollement and test
+num_utters_test = 7
+batch_test = 4
+# model
+hidden_lstm = 768
+num_layers_lstm = 3
+hidden_fc = 256
