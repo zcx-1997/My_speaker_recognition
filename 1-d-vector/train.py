@@ -159,4 +159,4 @@ if __name__ == '__main__':
 
     model_path = r'checkpoints/final_epoch_1000.model'
     acc = test(model_path)
-    print(acc)  # 0.873800.
+    print(acc)  # 0.8997

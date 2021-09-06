@@ -4,8 +4,8 @@
 @Project -> File    ：My_speaker_recognition -> wav_process
 @IDE                ：PyCharm
 @Author             ：zcx
-@Date               ：2021/8/11 上午10:26
-@Description        ：将TIMIT数据集转换成npy数据 trian:0-461,test:462-629
+@Date               ：2021/9/6 下午3:46
+@Description        ：
                     _ooOoo_    
                    o8888888o    
                    88" . "88    
@@ -35,18 +35,20 @@ import torchaudio
 import numpy as np
 from python_speech_features import fbank, logfbank, mfcc
 
-import constants as c
-
-def extractFeatures(src_path, tar_dir):
+def extract_and_save_features(src_path, tar_dir):
     """
     Extract features, the features are saved as numpy file.
     The time per utterance is fixed by 3s and 299 frames from each utterance
     """
 
+    # set constants
+    train_num_spks = 462
+    fix_time_utter = 3
+
     print("start text independent utterance feature extraction")
 
-    train_dir = os.path.join(tar_dir, 'train_tisv')
-    test_dir = os.path.join(tar_dir, 'test_tisv')
+    train_dir = os.path.join(tar_dir, 'train')
+    test_dir = os.path.join(tar_dir, 'test')
     os.makedirs(train_dir, exist_ok=True)
     print("train data dir ok!")
     os.makedirs(test_dir, exist_ok=True)
@@ -55,8 +57,6 @@ def extractFeatures(src_path, tar_dir):
     spks_list = glob.glob(os.path.dirname(src_path))
     total_num_spks = len(spks_list)
 
-
-    train_num_spks = c.train_num_spks
     test_num_spks = total_num_spks - train_num_spks
     print("total speaker number : %d" % total_num_spks)
     print("train : %d, test : %d" % (train_num_spks, test_num_spks))
@@ -70,11 +70,11 @@ def extractFeatures(src_path, tar_dir):
             wav_path = os.path.join(spk_dir, wav_name)
             audio, sr = torchaudio.load(wav_path)
             time = audio.shape[1] / sr
-            if time >= c.fix_time_utter:
-                audio = audio[:, 0:sr * c.fix_time_utter].reshape(-1, sr * c.fix_time_utter)
+            if time >= fix_time_utter:
+                audio = audio[:, 0:sr * fix_time_utter].reshape(-1, sr * fix_time_utter)
                 time = audio.shape[1] / sr
             else:
-                zeros = torch.zeros(sr * c.fix_time_utter - audio.shape[1]).reshape(1, -1)
+                zeros = torch.zeros(sr * fix_time_utter - audio.shape[1]).reshape(1, -1)
                 audio = torch.cat((audio, zeros), dim=1)
                 time = audio.shape[1] / sr
             # print('time', time)  # 3
@@ -95,7 +95,6 @@ def extractFeatures(src_path, tar_dir):
 
 if __name__ == '__main__':
     src_path = r'/home/zcx/datasets/TIMIT/TIMIT_WAV/*/*/*/*.wav'
-    tar_dir = r'./data'
+    tar_dir = r'./TIMIT'
 
-    extractFeatures(src_path, tar_dir)
-    # extractFeatures()
+    extract_and_save_features(src_path, tar_dir)

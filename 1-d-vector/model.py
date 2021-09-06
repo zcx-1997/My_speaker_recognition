@@ -46,9 +46,11 @@ class MyMLP(nn.Module):
 
     def forward(self, x):
         x = self.fc1(x)
+        x = nn.ReLU(x)
         x = self.fc2(x)
+        x = nn.ReLU(x)
         x = self.fc3(x)
-        # x = nn.ReLU(x)
+        x = nn.ReLU(x)
         x = self.fc4(x)
         return x
 

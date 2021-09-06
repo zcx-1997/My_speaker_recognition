@@ -33,10 +33,15 @@ import torch
 
 y = torch.arange(2)
 print(y)
+# y3 = y.expand(4)
+# print(y3)
+
 y = y.view(2,1)
 print(y)
-y1 = y.repeat(1,2).view(2*2)
+y1 = y.expand(2,4)
 print(y1)
+y2 = y1.reshape(-1)
+print(y2)
 
 x = torch.arange(12).view(2,2,3)
 print(x)

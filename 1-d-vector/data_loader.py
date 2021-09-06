@@ -45,17 +45,18 @@ class TIMITDataset(Dataset):
         self.shuffle = random.shuffle
         self.spks_list = os.listdir(self.root_dir)
         self.shuffle(self.spks_list)
-        self.frames_lables = []
+        self.frames_labels = []
+        self._load_data()
 
     def __getitem__(self, idx):
-        self._load_data()
-        feat, label = self.frames_lables[idx]
+        feat, label = self.frames_labels[idx]
         return feat, label  # torch.Size([40, 40])  torch.Size([])
 
     def __len__(self):
-        num_spks = len(self.spks_list)
-        num_utters = num_spks * c.num_utters_trian
-        lens = num_utters * int(c.num_frames / 40)
+        lens = len(self.frames_labels)
+        # num_spks = len(self.spks_list)
+        # num_utters = num_spks * c.num_utters_trian
+        # lens = num_utters * int(c.num_frames / 40)
         return lens
 
     def _load_data(self):
@@ -65,14 +66,22 @@ class TIMITDataset(Dataset):
             spk_feats = np.load(spk_path)
             spk_feats = spk_feats[:, :c.num_frames]
 
-            indices = torch.arange(0, 160, 40)
+            for utter_feats in spk_feats:
+                for i, frame_feat in enumerate(utter_feats):
+                    if i >= 30 and i < len(utter_feats)-10:
+                        stacked_frame_feat = utter_feats[i-30:i+11]
+                        label = spk_id
+                        self.frames_labels.append((stacked_frame_feat, label))
 
-            for utter in spk_feats:
-                for i in indices:
-                    frame = utter[i:i + 40]
-                    feat = torch.tensor(frame, dtype=torch.float32)
-                    label = torch.tensor(spk_id).long()
-                    self.frames_lables.append((feat, label))
+
+            # indices = torch.arange(0, 160, 40)
+            #
+            # for utter in spk_feats:
+            #     for i in indices:
+            #         frame = utter[i:i + 40]
+            #         feat = torch.tensor(frame, dtype=torch.float32)
+            #         label = torch.tensor(spk_id).long()
+            #         self.frames_lables.append((feat, label))
 
 class TIMITDataset_Veri(Dataset):
     def __init__(self):
@@ -102,16 +111,17 @@ if __name__ == '__main__':
 
     feat, label = data[1]
     print(feat.shape)
-    print(label.shape)
+    print(label)
 
     data_loader = DataLoader(data,batch_size=64,shuffle=True,drop_last=True)
     print(len(data_loader))
 
     x, y = next(iter(data_loader))
     print(x.shape)
+    print(y)
     print(y.shape)
 
-    testdata = TIMITDataset_Veri()
-    enroll, test = testdata[0]
-    print(enroll.shape)
-    print(test.shape)
+    # testdata = TIMITDataset_Veri()
+    # enroll, test = testdata[0]
+    # print(enroll.shape)
+    # print(test.shape)

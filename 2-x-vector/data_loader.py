@@ -52,22 +52,54 @@ class TIMITDataset(Dataset):
 
     def __getitem__(self, idx):
         self.spk_name = self.spks_list[idx]
-        np_spk = np.load(os.path.join(self.path, self.spk_name))
+        spk_feats = np.load(os.path.join(self.path, self.spk_name))
         spk_id = int(self.spk_name[:-4])
         if self.shuffle:
             indices = random.sample(range(0, 10), 10)
-            utters = np_spk[indices]
+            spk_feats = spk_feats[indices]
         else:
-            utters = np_spk
-        utters = utters[:, :self.num_frames]
-        utters = torch.tensor(utters, dtype=torch.float32)
-        label = torch.tensor(spk_id)
-        return utters, label
+            spk_feats = spk_feats
+
+        if self.train:
+            spk_feats = spk_feats[:, :self.num_frames]
+            spk_feats = torch.tensor(spk_feats, dtype=torch.float32)
+            label = torch.tensor(spk_id)
+            return spk_feats, label
+        else:
+            spk_feats = spk_feats[:, :self.num_frames]
+            spk_feats = torch.tensor(spk_feats, dtype=torch.float32)
+            indices = random.sample(range(0, 10), 8)
+            enroll_feats = spk_feats[indices[1:]]
+            veri_feats = spk_feats[indices[0]]
+            return enroll_feats, veri_feats
+
 
     def __len__(self):
         return len(self.spks_list)
 
+class TIMITDataset_Veri(Dataset):
+    def __init__(self):
+        self.root_dir = r'data/test_tisv'
+        self.spks_list = os.listdir(self.root_dir)
+
+    def __len__(self):
+        return len(self.spks_list)
+
+    def __getitem__(self, idx):
+        spk = self.spks_list[idx]
+        spk_path = os.path.join(self.root_dir, spk)
+        spk_feats = np.load(spk_path)
+        spk_feats = spk_feats[:, 100:140]
+        spk_feats = torch.tensor(spk_feats, dtype=torch.float32)
+        indices = random.sample(range(0, 10), 8)
+        enroll_feats = spk_feats[indices[1:]]
+        veri_feats = spk_feats[indices[0]]
+        return  enroll_feats, veri_feats
+
+
+
 if __name__ == '__main__':
+    print("=================== TRAIN ==================")
     trian_db = TIMITDataset()
     print(len(trian_db))
     train_x, train_y = trian_db[0]
@@ -78,3 +110,16 @@ if __name__ == '__main__':
     x,y = next(iter(train_loader))
     print(x.shape)
     print(y)
+
+    print("=================== TEST ==================")
+    test_db = TIMITDataset(train=False)
+    print(len(test_db))
+    enroll_data, veri_data = test_db[0]
+    print(enroll_data.shape)
+    print(veri_data.shape)
+
+    test_loader = DataLoader(test_db,batch_size=4,shuffle=True,drop_last=True)
+    enroll_data, veri_data = next(iter(test_loader))
+    print(enroll_data.shape)
+    print(veri_data.shape)
+
