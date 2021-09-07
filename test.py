@@ -31,19 +31,10 @@
 
 import torch
 
-y = torch.arange(2)
-print(y)
-# y3 = y.expand(4)
-# print(y3)
-
-y = y.view(2,1)
-print(y)
-y1 = y.expand(2,4)
-print(y1)
-y2 = y1.reshape(-1)
-print(y2)
-
-x = torch.arange(12).view(2,2,3)
+x = torch.arange(0,12).view(2,3,2)
 print(x)
-x1= x.reshape(x.shape[0]*x.shape[1],x.shape[2])
-print(x1)
+y = x.reshape(-1,x.shape[2])+1
+print(y.shape)
+print(y)
+y = y.reshape(x.shape[0],x.shape[1],x.shape[2])
+print(y)
